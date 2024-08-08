@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class Dog 
 {
     public static void main(String args[])
@@ -7,7 +9,11 @@ public class Dog
         dogs[0] = new Dog1("Race", "Husky");
         dogs[1] = new Dog1("Tim", "Pomerian");
 
-        dogs[1].setter("Timothy", "Mongrel");
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter name and breed of dog:  ");
+        String nm = sc.nextLine();
+        String br = sc.nextLine();
+        dogs[1].setter(nm, br);
 
         System.out.println("Name\tBreed");
         int i;
