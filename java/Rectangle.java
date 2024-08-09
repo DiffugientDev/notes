@@ -1,25 +1,27 @@
 import java.util.*;
 
-public class rectangle
+public class Rectangle
 {
     public static void main(String[] args_Strings)
     {
         float l,b;
-        
+
+        System.out.println("Enter height and width of rectangle: ");
         Scanner sc = new Scanner(System.in);
         l = sc.nextFloat();
         b = sc.nextFloat();
-        
-        rect r1 = new rect(l,b);
+        sc.close();
+
+        Rect r1 = new Rect(l,b);
         System.out.println("area = " + r1.calc_area() + "\nperimeter:  " + r1.calc_perimeter());
     }
 }
 
-class rect
+class Rect
 {
-    float height, width; 
+    float height, width;
 
-    rect(float h, float w)
+    Rect(float h, float w)
     {
         this.height = h;
         this.width = w;
