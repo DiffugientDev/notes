@@ -1,63 +1,118 @@
 import java.util.*;
 
-public class Bank 
-{
-    public static void main(String args[])
+public class Bank {
+    public static void main(String[] args) 
     {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Enter name: ");
-        String nm = sc.nextLine();
-        System.out.println("Enter Account Type: ");
-        String actype = sc.nextLine();
-        System.out.println("Enter Account number: ");
-        int acnum = sc.nextInt();
-        System.out.println("Enter Balance: ");
-        double bal = sc.nextDouble();
-        sc.close();
+        System.out.print("Enter number of customers: ");
+        int n = sc.nextInt();
+        sc.nextLine(); 
 
-        Bank1 cust1 = new Bank1(nm, actype,acnum,bal);
-        cust1.display();
-        cust1.withdraw(700);
-        cust1.display();
-        cust1.deposit(100.6);
-        cust1.display();
+        Bank1[] cust = new Bank1[n];
+
+        for (int i = 0; i < cust.length; i++) 
+        {
+            System.out.println("Customer " + (i + 1));
+            cust[i] = new Bank1(sc);
+        }
+
+        while(true) 
+        {
+            System.out.print("Enter account number: ");
+            String acnum = sc.nextLine();
+            int index = search(cust, acnum);
+
+            if (index == -1) 
+            {
+                System.out.println("Invalid account number");
+                continue;
+            }
+
+            System.out.print("Operations:\n\t1. Display\n\t2. Deposit\n\t3. Withdraw\n\t4. Exit\nEnter serial number: ");
+            int choice = sc.nextInt();
+            sc.nextLine(); 
+            switch (choice) 
+            {
+                case 1:
+                    cust[index].display();
+                    break;
+                case 2:
+                    cust[index].deposit(sc);
+                    break;
+                case 3:
+                    cust[index].withdraw(sc);
+                    break;
+                case 4:
+                    sc.close();
+                    return;
+                default:
+                    System.out.println("Enter a valid number.");
+            }
+        }
+    }
+
+    static int search(Bank1[] b, String acnum) 
+    {
+        for (int i = 0; i < b.length; i++) 
+        {
+            if (acnum.equals(b[i].acc_num)) 
+            {
+                return i;
+            }
+        }
+        return -1;
     }
 }
 
-class Bank1
+class Bank1 
 {
-    String name, acc_type;
-    private int acc_num;
+    private String name, acc_type;
+    public String acc_num;
     private double balance;
 
-    Bank1(String nm, String acc_t, int acnum, double bal)
+    // Constructor with Scanner passed as parameter
+    Bank1(Scanner sc) 
     {
-        this.name = nm;
-        this.acc_type = acc_t;
-        this.acc_num = acnum;
-        this.balance = bal;
+        System.out.print("Enter name: ");
+        this.name = sc.nextLine();
+        System.out.print("Enter Account Type: ");
+        this.acc_type = sc.nextLine();
+        System.out.print("Enter Account number: ");
+        this.acc_num = sc.nextLine();
+        System.out.print("Enter Balance: ");
+        this.balance = sc.nextDouble();
+        sc.nextLine(); // Consume newline
     }
 
-    void display()
+    void display() 
     {
-        System.out.println("\nAccount information of " + this.acc_num + ":\nName: " + this.name + "\nAccount Type: "+  this.acc_type + "\nAcount number: " + this.acc_num+ "\nBalance: " + this.balance + "\n");
+        System.out.println("\nAccount information of " + this.acc_num + ":\nName: " + this.name +
+                "\nAccount Type: " + this.acc_type + "\nAccount number: " + this.acc_num +
+                "\nBalance: " + this.balance + "\n");
     }
 
-    void deposit(double amt)
+    void deposit(Scanner sc) 
     {
+        System.out.print("Enter Amount to be deposited: ");
+        double amt = sc.nextDouble();
+        sc.nextLine(); // Consume newline
+
         this.balance += amt;
         System.out.println(amt + " deposited successfully");
     }
 
-    void withdraw(double amt)
+    void withdraw(Scanner sc) 
     {
-        if(balance < amt )
-            System.out.println("Balance is low");
-        else
+        System.out.print("Enter Amount to be withdrawn: ");
+        double amt = sc.nextDouble();
+        sc.nextLine(); // Consume newline
+
+        if (balance < amt) 
         {
+            System.out.println("Insufficient balance");
+        } else {
             balance -= amt;
             System.out.println(amt + " withdrawn successfully");
-            
         }
     }
 }
