@@ -1,3 +1,5 @@
+//low balance == 500
+
 import java.util.*;
 
 public class Bank {
@@ -28,13 +30,13 @@ public class Bank {
                 continue;
             }
 
-            System.out.print("Operations:\n\t1. Display\n\t2. Deposit\n\t3. Withdraw\n\t4. Exit\nEnter serial number: ");
+            System.out.print("Operations:\n\t1. Display\n\t2. Deposit\n\t3. Withdraw\n\t4. Number of customers with low balance\n\t5. Exit\nEnter serial number: ");
             int choice = sc.nextInt();
             sc.nextLine(); 
             switch (choice) 
             {
                 case 1:
-                    cust[index].display();
+                    cust[index].display(sc);
                     break;
                 case 2:
                     cust[index].deposit(sc);
@@ -43,6 +45,9 @@ public class Bank {
                     cust[index].withdraw(sc);
                     break;
                 case 4:
+                    System.out.println("Number of customer with low balance: " + lowBalNum(cust));
+                    break;
+                case 5:
                     sc.close();
                     return;
                 default:
@@ -53,21 +58,33 @@ public class Bank {
 
     static int search(Bank1[] b, String acnum) 
     {
+        
         for (int i = 0; i < b.length; i++) 
         {
-            if (acnum.equals(b[i].acc_num)) 
+            if (acnum.equals(b[i].getAcc()))
             {
                 return i;
             }
         }
         return -1;
     }
+
+    static int lowBalNum(Bank1[] b)
+    {
+        int count=0;
+        for(int i=0 ; i< b.length ; i++)
+        {
+            if(b[i].lowBalance())
+                count++;
+        }
+        return count;
+    }
 }
 
 class Bank1 
 {
     private String name, acc_type;
-    public String acc_num;
+    final private String acc_num;
     private double balance;
 
     // Constructor with Scanner passed as parameter
@@ -84,11 +101,31 @@ class Bank1
         sc.nextLine(); // Consume newline
     }
 
-    void display() 
+    void display(Scanner sc) 
     {
-        System.out.println("\nAccount information of " + this.acc_num + ":\nName: " + this.name +
-                "\nAccount Type: " + this.acc_type + "\nAccount number: " + this.acc_num +
-                "\nBalance: " + this.balance + "\n");
+        System.out.print("What would you like to be displayed?\n\t1. Name\n\t2. Account Type\n\t3. Account Number\n\t4. Balance\n\t5. Type of Customer\nEnter serial number: ");
+        int choice = sc.nextInt();
+        sc.nextLine();
+
+        switch(choice)
+        {
+            case 1:
+                System.out.println("Name: " + this.name);
+                break;
+            case 2:
+                System.out.println("Account Type: " + this.acc_type);
+                break;
+            case 3:
+                System.out.println("Account number: " + this.acc_num);
+                break;
+            case 4:
+                System.out.println("Balance: " + this.balance);
+                break;
+            case 5: 
+                System.out.println(typeofCustomer());
+            default:
+                System.out.println("Enter valid choice: ");
+        }
     }
 
     void deposit(Scanner sc) 
@@ -107,12 +144,36 @@ class Bank1
         double amt = sc.nextDouble();
         sc.nextLine(); // Consume newline
 
-        if (balance < amt) 
+        if (balance-amt < 500) 
+            System.out.println("Low balance");
+        else 
         {
-            System.out.println("Insufficient balance");
-        } else {
             balance -= amt;
             System.out.println(amt + " withdrawn successfully");
         }
+    }
+
+    String getAcc()
+    {
+        return acc_num;
+    }
+
+    boolean lowBalance()
+    {
+        if(this.balance > 500)
+            return true;
+        return false;
+    }
+
+    String typeofCustomer()
+    {
+        if(balance > 5000000)
+            return "Diamond Customer";
+        else if(balance > 1000000)
+            return "Gold Customer";
+        else if(balance > 50000)
+            return "Silver Customer";
+        else
+            return "Regular Customer";        
     }
 }
