@@ -1,79 +1,140 @@
 import java.util.*;
 
-public class Library
+public class Main
 {
-    public static void main(String args[])
+    public static void main(String[] args)
     {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Number of books in library are: ");
-        int n = sc.nextInt();
-        sc.nextLine();
+
+        Library1 lib1 = new Library1();
+
         
-        Book[] b = new Book[n];
-        //insert book
-        for(int i=0; i<b.length; i++)
+        while(true)
         {
-            b[i] = new Book(sc);
+            System.out.println("Operations:\n\t1. Add book\n\t2. Delete Book\n\t3. Search Book\n\t4. Display Books\n\t5. Exit\nChoose option.");
+            int choice = sc.nextInt();
+            sc.nextLine();
+            switch(choice)
+            {
+                case 1:
+                    lib1.insert(sc);
+                    break;
+
+                case 2:
+                    lib1.remove(sc);
+                    break;
+
+                case 3:
+                    int n = lib1.search(sc);
+                    if(n >= 0)
+                        System.out.println("Book Exists in library");
+                    else
+                         System.out.println("Book does not exist in library");
+                    break;
+                    
+
+                case 4:
+                    System.out.println("Name\tAuthor\tEdition");
+                    for(int i=0 ; i<lib1.books.size() ; i++)
+                    {
+                        System.out.println(lib1.books.get(i).bookName + "\t" + lib1.books.get(i).authName + "\t" + lib1.books.get(i).edition);
+                    }
+                    break;
+
+
+                case 5:
+                    sc.close();
+                    System.out.println("Exiting");
+                    return;
+                
+                default:
+                    System.out.println("Enter valid option.");
+                    break;
+            }
         }
 
-        //issue book
-
-
-
-        sc.close();
-    }
-
-    static int search(Book[] b, Scanner sc)
-    {
-        String bName = sc.nextLine();
-        String aName = sc.nextLine();
-        String ed = sc.nextLine();
-        for(int i=0; i<b.length ;i++)
-        {
-            if((b[i].bookName).equals(bName) && (b[i].authName).equals(aName) && (b[i].bookEd).equals(ed))
-                return i;
-        }
-        return -1;
-    }
-
-    static void issue(Book[] b, Scanner sc)
-    {
-        int i = search(b,sc);
-        if( i > -1)
-            b[i].copies --;
-        else
-            System.out.print("no book found");
+        
     }
 }
 
 class Book
 {
-    public String bookName;
-    public String authName;
-    public String bookID;
-    public String bookEd;
-    private double price;
-    public int copies;
-
+    String bookName;
+    String authName;
+    int edition;
+    String bookID;
+    double bookPrice;
+    int copies; 
     Book(Scanner sc)
     {
-        System.out.print("Book Name: ");
+        System.out.println("Enter Book name: ");
         this.bookName = sc.nextLine();
-
-        System.out.print("Author Name: ");
+        System.out.println("Enter Author name: ");
         this.authName = sc.nextLine();
-
-        System.out.print("Book ID: ");
+        System.out.println("Enter Edition Number: ");
+        this.edition = sc.nextInt();
+        sc.nextLine();
+        System.out.println("Enter Book ID: ");
         this.bookID = sc.nextLine();
-
-        System.out.print("Edition Number: ");
-        this.bookEd = sc.nextLine();
-
-        System.out.print("Number of copies: ");
+        System.out.println("Enter Book price: ");
+        this.bookPrice = sc.nextDouble();
+        sc.nextLine();
+        System.out.println("Enter Book copies: ");
         this.copies = sc.nextInt();
+        sc.nextLine();
+    }
+}
+class Library1
+{
+    ArrayList<Book> books;
 
-        System.out.print("Price: ");
-        this.price = sc.nextDouble();
+    Library1()
+    {
+        books = new ArrayList<Book>();
+    }
+
+    void insert(Scanner sc)
+    {
+        Book b  = new Book(sc);
+        this.books.add(b);
+        System.out.println("Book has been added successfully.");
+    }
+
+    void remove(Scanner sc)
+    {
+        System.out.print("Which book do you want to remove?");
+        int n = search(sc);
+    
+        if(n >= 0)
+        {
+            this.books.remove(n);
+            System.out.println("Book has been deleted successfully.");
+        }
+
+        else
+            System.out.println("Enter valid name.");
+    }
+
+
+    int search(Scanner sc)
+    {
+        System.out.println("Enter name: ");
+        String nm = sc.nextLine();
+        System.out.println("Enter author: ");
+        String auth = sc.nextLine();
+        System.out.println("Enter edition: ");
+        int ed = sc.nextInt();
+        sc.nextLine();
+
+        for(int i=0 ; i<books.size(); i++)
+        {
+            if(books.get(i).bookName.equals(nm) && books.get(i).authName.equals(auth) && books.get(i).edition == ed && books.get(i).copies > 0)
+            {
+                return i;
+            }
+        }
+        return -1;
+        
     }
 
 }
